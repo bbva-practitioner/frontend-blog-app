@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 
 import { BlogPostModel } from '../models/BlogPostModel.js';
 
@@ -9,20 +9,42 @@ export class BlogPost extends LitElement {
     };
   }
 
+  static get styles() {
+    return css`
+      .post-author,
+      .post-date {
+        font-size: 0.8rem;
+      }
+    `;
+  }
+
   render() {
     return html`
-      <h3>${this.post.title}</h3>
-      <p>por ${this.post.author}</p>
-      <p>publicado el ${this.post.date.toFormat("dd' de 'MMMM")}</p>
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+        crossorigin="anonymous"
+      />
+      <article>
+        <div class="d-flex align-items-baseline justify-content-between">
+          <h3>${this.post.title}</h3>
+          <div class="ml-5">
+            ${this.post.categories.map(
+              category =>
+                html`<span class="badge bg-secondary mx-1">${category}</span>`
+            )}
+          </div>
+        </div>
+        <p class="text-muted mb-0 post-author">por ${this.post.author}</p>
+        <p class="text-muted post-date">
+          publicado el ${this.post.date.toFormat("dd' de 'MMMM")}
+        </p>
 
-      ${this.post.highlighted ? html`<span>Post destacado</span>` : ''}
+        ${this.post.highlighted ? html`<span>Post destacado</span>` : ''}
 
-      <h4>Categorías</h4>
-      <ul>
-        ${this.post.categories.map(category => html`<li>${category}</li>`)}
-      </ul>
-
-      <p>${this.post.content}</p>
+        <p>${this.post.content}</p>
+      </article>
     `;
   }
 }

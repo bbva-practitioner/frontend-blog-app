@@ -1,8 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { BlogPostModel } from '../models/BlogPostModel.js';
 
-const logo = new URL('../assets/open-wc-logo.svg', import.meta.url).href;
-
 const posts = [
   {
     title: 'Creando nuestros componentes con LitElement',
@@ -33,46 +31,40 @@ export class BlogApp extends LitElement {
 
   static get styles() {
     return css`
-      :host {
-        min-height: 100vh;
+      /* :host {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        font-size: calc(10px + 2vmin);
-        color: #1a2b42;
-        max-width: 960px;
-        margin: 0 auto;
-        text-align: center;
-        background-color: var(--blog-app-background-color);
+        justify-content: space-between;
+        align-items: stretch;
+        height: 100%;
       }
 
-      main {
-        flex-grow: 1;
+      header {
+        background-color: #1d83d6;
+        padding: 1rem;
       }
 
-      .logo {
-        margin-top: 36px;
-        animation: app-logo-spin infinite 20s linear;
+      .main-content {
+        padding: 1rem 3rem;
       }
 
-      @keyframes app-logo-spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
+      .articles {
+        width: 70%;
       }
 
-      .app-footer {
-        font-size: calc(12px + 0.5vmin);
-        align-items: center;
+      aside {
+        background-color: #fca8d7;
+        width: 30%;
       }
 
-      .app-footer a {
-        margin-left: 5px;
+      footer {
+        background-color: #262c30;
       }
+
+      .main-content {
+        display: flex;
+        flex-direction: row;
+      } */
     `;
   }
 
@@ -83,20 +75,38 @@ export class BlogApp extends LitElement {
 
   render() {
     return html`
-      <main>
-        <h1>${this.title}</h1>
-
-        ${posts.map(post => html`<blog-post .post=${post}></blog-post>`)}
-      </main>
-
-      <footer class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+        crossorigin="anonymous"
+      />
+      <header class="text-bg-primary pt-5 pb-4">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h1>Título del blog</h1>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="container min-vh-100">
+        <div class="row">
+          <div class="col-12 col-md-8 col-lg-9 articles">
+            ${posts.map(
+              post =>
+                html`<div class="mt-4 mb-5"></div><blog-post .post=${post}></blog-post></div>`
+            )}
+          </div>
+          <aside class="col-4 col-lg-3 d-none d-md-block">Barra lateral</aside>
+        </div>
+      </div>
+      <footer class="text-bg-dark">
+        <div class="container">
+          <div class="row">
+            <div class="col">Footer</div>
+          </div>
+        </div>
       </footer>
     `;
   }
