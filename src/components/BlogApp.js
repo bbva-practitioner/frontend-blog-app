@@ -1,76 +1,54 @@
 import { LitElement, html, css } from 'lit';
 import { BlogPostModel } from '../models/BlogPostModel.js';
 
-const posts = [
-  {
-    title: 'Creando nuestros componentes con LitElement',
-    author: 'Franco Frizzo',
-    date: '02/07/2022',
-    content: 'Contenido del post…',
-    categories: ['Desarrollo web', 'LitElement'],
-    highlighted: true,
-  },
-  {
-    title: 'Este es otro post en nuestro blog',
-    author: 'Franco Frizzo',
-    date: '01/07/2022',
-    content: 'Lorem ipsum',
-    categories: ['Desarrollo web', 'LitElement'],
-    highlighted: false,
-  },
-].map(data => new BlogPostModel(data));
-
 export class BlogApp extends LitElement {
   static get properties() {
     return {
       title: {
         type: String,
       },
+      posts: {
+        type: Array,
+        attribute: false,
+      },
     };
-  }
-
-  static get styles() {
-    return css`
-      /* :host {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: stretch;
-        height: 100%;
-      }
-
-      header {
-        background-color: #1d83d6;
-        padding: 1rem;
-      }
-
-      .main-content {
-        padding: 1rem 3rem;
-      }
-
-      .articles {
-        width: 70%;
-      }
-
-      aside {
-        background-color: #fca8d7;
-        width: 30%;
-      }
-
-      footer {
-        background-color: #262c30;
-      }
-
-      .main-content {
-        display: flex;
-        flex-direction: row;
-      } */
-    `;
   }
 
   constructor() {
     super();
     this.title = 'My app';
+    this.posts = [
+      {
+        id: 1,
+        title: 'Creando nuestros componentes con LitElement',
+        author: 'Franco Frizzo',
+        date: '02/07/2022',
+        content: 'Contenido del post…',
+        categories: ['Desarrollo web', 'LitElement'],
+        highlighted: true,
+      },
+      {
+        id: 2,
+        title: 'Este es otro post en nuestro blog',
+        author: 'Franco Frizzo',
+        date: '01/07/2022',
+        content: 'Lorem ipsum',
+        categories: ['Desarrollo web', 'LitElement'],
+        highlighted: false,
+      },
+    ].map(data => new BlogPostModel(data));
+  }
+
+  toggleHighlightPost(postId) {
+    // console.log(this.posts);
+    this.posts = this.posts.map(post => {
+      if (post.id === postId) {
+        // console.log(`Modifying post ${post.id}`);
+        return { ...post, highlighted: !post.highlighted };
+      }
+      return post;
+    });
+    // console.log(this.posts);
   }
 
   render() {
@@ -81,33 +59,51 @@ export class BlogApp extends LitElement {
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
         crossorigin="anonymous"
       />
-      <header class="text-bg-primary pt-5 pb-4">
-        <div class="container">
+      <div class="h-100 d-flex flex-column">
+        <header class="text-bg-primary">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col pt-5 pb-4">
+                <h1>Título del blog</h1>
+              </div>
+              <div class="col-6 col-lg-4">
+                <login-form></login-form>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div class="container py-4">
           <div class="row">
-            <div class="col">
-              <h1>Título del blog</h1>
+            <div class="col-12 col-md-8 col-lg-9 articles">
+              ${this.posts.map(
+                post =>
+                  html`<div class="mt-4 mb-5">
+                    <blog-post
+                      .post=${post}
+                      @toggle-highlight-post="${() =>
+                        this.toggleHighlightPost(post.id)}"
+                    >
+                    </blog-post>
+                  </div>`
+              )}
+            </div>
+            <div class="col-4 col-lg-3 d-none d-md-block">
+              <blog-sidebar
+                .highlightedPosts=${this.posts.filter(post => post.highlighted)}
+              ></blog-sidebar>
             </div>
           </div>
         </div>
-      </header>
-      <div class="container min-vh-100">
-        <div class="row">
-          <div class="col-12 col-md-8 col-lg-9 articles">
-            ${posts.map(
-              post =>
-                html`<div class="mt-4 mb-5"></div><blog-post .post=${post}></blog-post></div>`
-            )}
+        <footer class="text-bg-dark mt-auto py-5">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                Blog creado con 💙 durante el curso BBVA Practitioner Frontend.
+              </div>
+            </div>
           </div>
-          <aside class="col-4 col-lg-3 d-none d-md-block">Barra lateral</aside>
-        </div>
+        </footer>
       </div>
-      <footer class="text-bg-dark">
-        <div class="container">
-          <div class="row">
-            <div class="col">Footer</div>
-          </div>
-        </div>
-      </footer>
     `;
   }
 }
