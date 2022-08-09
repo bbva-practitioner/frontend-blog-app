@@ -68,7 +68,6 @@ export class BlogPost extends LitElement {
         <div class="d-flex align-items-baseline justify-content-between">
           <h3>${this.post.title}</h3>
           <button
-            disabled
             class="btn btn-link btn-sm"
             @click="${this.toggleHighlightPost}"
             title="${this.post.highlighted
