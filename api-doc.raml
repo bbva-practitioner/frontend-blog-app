@@ -32,13 +32,13 @@ types:
       updated_at:
         type: string
 
-/Posts:
+/posts:
   get:
     description: Obtener una lista de todos los posts
     responses:
       200:
         body:
-          type: PostWithId[]
+          type: PostWithIdAndDates[]
   post:
     description: Crear un nuevo post
     body:
@@ -46,7 +46,7 @@ types:
     responses:
       201:
         body:
-          type: PostWithId
+          type: PostWithIdAndDates
       422:
         description: Los datos enviados tienen errores
   /{id}:
@@ -54,7 +54,7 @@ types:
       responses:
         200:
           body:
-            type: PostWithId
+            type: PostWithIdAndDates
         404:
           description: El post solicitado no existe
     put:
@@ -63,7 +63,7 @@ types:
       responses:
         200:
           body:
-            type: PostWithId
+            type: PostWithIdAndDates
         404:
           description: El post solicitado no existe
         422:

@@ -11,7 +11,6 @@
     "start": "web-dev-server"
   },
   "dependencies": {
-    "bootstrap": "^5.2.0",
     "lit": "^2.0.2",
     "luxon": "^3.0.1"
   },
