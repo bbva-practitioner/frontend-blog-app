@@ -1,0 +1,76 @@
+#%RAML 1.0
+title: Blog App REST API
+version: v1
+baseUrl: https://practitioner-blog-app-backend.herokuapp.com/
+mediaType: application/json
+
+types:
+  Post:
+    type: object
+    properties:
+      title:
+        type: string
+        required: True
+      author:
+        type: string
+        required: True
+      content:
+        type: string
+        required: True
+      categories:
+        type: string[]
+        required: True
+      highlighted:
+        type: boolean
+  PostWithIdAndDates:
+    type: Post
+    properties:
+      id:
+        type: number
+      created_at:
+        type: string
+      updated_at:
+        type: string
+
+/Posts:
+  get:
+    description: Obtener una lista de todos los posts
+    responses:
+      200:
+        body:
+          type: PostWithId[]
+  post:
+    description: Crear un nuevo post
+    body:
+      type: Post
+    responses:
+      201:
+        body:
+          type: PostWithId
+      422:
+        description: Los datos enviados tienen errores
+  /{id}:
+    get:
+      responses:
+        200:
+          body:
+            type: PostWithId
+        404:
+          description: El post solicitado no existe
+    put:
+      body:
+        type: Post
+      responses:
+        200:
+          body:
+            type: PostWithId
+        404:
+          description: El post solicitado no existe
+        422:
+          description: Los datos enviados tienen errores
+    delete:
+      responses:
+        204:
+          description: Post eliminado con éxito
+        404:
+          description: El post solicitado no existe
