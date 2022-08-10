@@ -1,4 +1,6 @@
 export async function getPosts() {
-  const response = await fetch('http://localhost:3000/posts');
+  const response = await fetch(
+    'https://practitioner-blog-app-backend.herokuapp.com/posts'
+  );
   return response.json();
 }
