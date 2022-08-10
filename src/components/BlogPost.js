@@ -1,4 +1,5 @@
 import { css, html, LitElement } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { BlogPostModel } from '../models/BlogPostModel.js';
 
@@ -92,7 +93,7 @@ export class BlogPost extends LitElement {
           </div>
         </div>
 
-        <p>${this.post.content}</p>
+        ${unsafeHTML(this.post.content)}
       </article>
     `;
   }
