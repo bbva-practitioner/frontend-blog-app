@@ -4,6 +4,18 @@ version: v1
 baseUrl: https://practitioner-blog-app-backend.herokuapp.com/
 mediaType: application/json
 
+securitySchemes:
+  - oauth_2_0:
+    type: OAuth 2.0
+    describedBy:
+      headers:
+        Authorization:
+          description: Token de autorización
+          type: string         
+      responses:
+        401:
+          description: Token inválido o expirado
+
 types:
   Post:
     type: object
@@ -41,6 +53,7 @@ types:
           type: PostWithIdAndDates[]
   post:
     description: Crear un nuevo post
+    securedBy: [oauth_2_0]
     body:
       type: Post
     responses:
@@ -58,6 +71,7 @@ types:
         404:
           description: El post solicitado no existe
     put:
+      securedBy: [oauth_2_0]
       body:
         type: Post
       responses:
@@ -69,8 +83,30 @@ types:
         422:
           description: Los datos enviados tienen errores
     delete:
+      securedBy: [oauth_2_0]
       responses:
         204:
           description: Post eliminado con éxito
         404:
           description: El post solicitado no existe
+  
+/auth:
+  /login:
+    post:
+      body:
+        type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+      responses:
+        200:
+          description: Login exitoso
+          body:
+            type: object
+            properties:
+              access_token:
+                type: string
+        401:
+          description: Credenciales inválidas
