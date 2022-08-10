@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
-import { getPosts } from '../backend/index.js';
-import { BlogPostModel } from '../models/BlogPostModel.js';
+import { authorization } from '../auth/Authorization.js';
+import { getPosts, updatePost } from '../backend/posts.js';
 
 export class BlogApp extends LitElement {
   static get properties() {
@@ -16,6 +16,10 @@ export class BlogApp extends LitElement {
         type: Boolean,
         attribute: false,
       },
+      isLoggedIn: {
+        type: Boolean,
+        attribute: false,
+      },
     };
   }
 
@@ -24,6 +28,7 @@ export class BlogApp extends LitElement {
     this.title = 'My app';
     this.posts = [];
     this.loading = false;
+    this.isLoggedIn = authorization.isLoggedIn();
   }
 
   async connectedCallback() {
@@ -31,20 +36,32 @@ export class BlogApp extends LitElement {
 
     this.loading = true;
     const posts = await getPosts();
-    this.posts = posts.map(data => new BlogPostModel(data));
+    this.posts = posts;
     this.loading = false;
   }
 
-  toggleHighlightPost(postId) {
-    // console.log(this.posts);
+  replacePost(postId, updatedPost) {
     this.posts = this.posts.map(post => {
       if (post.id === postId) {
-        // console.log(`Modifying post ${post.id}`);
-        return { ...post, highlighted: !post.highlighted };
+        return updatedPost;
       }
       return post;
     });
-    // console.log(this.posts);
+  }
+
+  toggleHighlightPost(postId) {
+    this.posts.forEach(async post => {
+      if (post.id === postId) {
+        const updatedPost = await updatePost(postId, {
+          highlighted: !post.highlighted,
+        });
+        this.replacePost(postId, updatedPost);
+      }
+    });
+  }
+
+  handleLogin() {
+    this.isLoggedIn = true;
   }
 
   render() {
@@ -63,7 +80,9 @@ export class BlogApp extends LitElement {
                 <h1>Título del blog</h1>
               </div>
               <div class="col-6 col-lg-4">
-                <login-form></login-form>
+                ${!this.isLoggedIn
+                  ? html`<login-form @login=${this.handleLogin}></login-form>`
+                  : ''}
               </div>
             </div>
           </div>
@@ -78,6 +97,7 @@ export class BlogApp extends LitElement {
                       html`<div class="mt-4 mb-5">
                         <blog-post
                           .post=${post}
+                          .editable=${this.isLoggedIn}
                           @toggle-highlight-post="${() =>
                             this.toggleHighlightPost(post.id)}"
                         >

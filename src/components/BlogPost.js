@@ -35,6 +35,9 @@ export class BlogPost extends LitElement {
       post: {
         type: BlogPostModel,
       },
+      editable: {
+        type: Boolean,
+      },
     };
   }
 
@@ -70,6 +73,7 @@ export class BlogPost extends LitElement {
           <h3>${this.post.title}</h3>
           <button
             class="btn btn-link btn-sm"
+            .disabled=${!this.editable}
             @click="${this.toggleHighlightPost}"
             title="${this.post.highlighted
               ? 'Post destacado'

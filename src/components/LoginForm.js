@@ -1,4 +1,5 @@
 import { html, LitElement } from 'lit';
+import { authorization } from '../auth/Authorization.js';
 
 export class LoginForm extends LitElement {
   static get properties() {
@@ -10,6 +11,16 @@ export class LoginForm extends LitElement {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  async handleLogin(event) {
+    event.preventDefault();
+    const { form } = event.submitter;
+    const username = form.querySelector('#login-username').value;
+    const password = form.querySelector('#login-password').value;
+    await authorization.login(username, password);
+    this.dispatchEvent(new CustomEvent('login'));
+  }
+
   render() {
     return html`<link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -19,18 +30,18 @@ export class LoginForm extends LitElement {
       />
       <div class="text-end">
         ${this.showForm
-          ? html`<form>
+          ? html`<form @submit=${this.handleLogin}>
               <div class="row mb-2 no-gutter">
                 <div class="col ps-0">
-                  <label for="login-email" class="form-label visually-hidden"
-                    >Email</label
+                  <label for="login-username" class="form-label visually-hidden"
+                    >Username</label
                   >
                   <input
-                    type="email"
-                    name="email"
+                    type="text"
+                    name="username"
                     class="form-control form-control-sm"
-                    id="login-email"
-                    placeholder="Email"
+                    id="login-username"
+                    placeholder="Username"
                   />
                 </div>
                 <div class="col ps-0">
@@ -55,7 +66,7 @@ export class LoginForm extends LitElement {
           : html`<button
               class="btn btn-link btn-small text-light"
               @click=${() => {
-                this.showForm = !this.showForm;
+                this.showForm = true;
               }}
             >
               Iniciar sesión
