@@ -18,7 +18,9 @@ export class BlogSidebar extends LitElement {
       />
       <aside class="p-4">
         <h3 class="mb-3 fs-5 text-uppercase">Posts destacados</h3>
-        ${this.highlightedPosts.map(post => html`<div>${post.title}</div>`)}
+        ${this.highlightedPosts.map(
+          post => html`<div class="my-2">${post.title}</div>`
+        )}
 
         <hr class="my-4" />
 
